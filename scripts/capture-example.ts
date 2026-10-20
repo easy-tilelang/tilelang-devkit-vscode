@@ -2,6 +2,7 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { CompilationTask } from '../src/host/task';
+import { resolvePython } from './python.mjs';
 import { assertRecord } from '../src/shared/record';
 
 async function main() {
@@ -10,6 +11,7 @@ async function main() {
   const output = process.argv[2]
     ? path.resolve(process.argv[2])
     : path.join(extension, 'artifacts', 'examples', 'cpu-vecadd.tltrace.json');
+  const python = resolvePython();
   const task = new CompilationTask({
     storagePath: path.join(extension, 'artifacts', 'real-capture'),
     runnerPath: path.join(extension, 'python', 'runner.py'),
@@ -19,7 +21,7 @@ async function main() {
   await task.start({
     entryPath: path.join(extension, 'examples', 'cpu_vecadd.py'),
     scriptArgs: ['--size', '128', '--repeat', '1', '--verify'], workingDirectory: '', disableCache: true,
-    pythonPath: process.env.TRACE_TEST_PYTHON ?? 'python',
+    pythonPath: python,
   }, process.env.TILELANG_WORKSPACE ?? extension);
   const record = task.record;
   assertRecord(record);

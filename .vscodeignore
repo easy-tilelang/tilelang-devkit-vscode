@@ -17,3 +17,6 @@ playwright.config.ts
 dist/test/**
 .claude/**
 .opencode/**
+
+.github/**
+.venv/**

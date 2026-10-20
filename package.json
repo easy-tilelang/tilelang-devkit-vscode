@@ -2,7 +2,7 @@
   "name": "tilelang-devkit-vscode",
   "displayName": "TileLang DevKit",
   "icon": "media/tilelang-devkit-logo.png",
-  "description": "TileLang development tools for VS Code. Lower Trace explores CPU C JIT compilation, lowering passes, IR differences and cache reuse, online or offline.",
+  "description": "TileLang development tools for VS Code: explore compilation traces, lowering passes, IR differences, generated code and cache reuse, online or offline.",
   "version": "0.1.0",
   "publisher": "easy-tilelang",
   "license": "MIT",
@@ -124,15 +124,15 @@
     "build": "node scripts/build.mjs",
     "watch": "node scripts/build.mjs --watch",
     "check": "tsc --noEmit",
-    "test": "tsx --test test/record.test.ts test/task.test.ts test/record-update.test.ts",
-    "test:python": "python -m pytest test/test_collector.py -q",
+    "test": "node scripts/test.mjs node",
+    "test:python": "node scripts/test.mjs python",
     "test:webview": "playwright test",
     "test:extension": "node scripts/test-extension.mjs",
     "preview": "node scripts/preview.mjs",
     "package": "vsce package --no-dependencies --baseContentUrl https://github.com/easy-tilelang/tilelang-devkit-vscode/blob/main --baseImagesUrl https://github.com/easy-tilelang/tilelang-devkit-vscode/raw/main",
     "vscode:prepublish": "npm run build",
     "benchmark": "tsx scripts/benchmark-record.ts",
-    "test:python:unit": "python -m unittest discover -s test -p test_runner_unit.py"
+    "test:python:unit": "node scripts/test.mjs python-unit"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.3",
@@ -142,7 +142,6 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.5",
     "@lezer/highlight": "^1.2.5",
-    "@vscode/vsce": "^4.0.0",
     "ajv": "^8.17.1",
     "diff": "^8.0.0",
     "lucide-react": "^0.468.0",
@@ -158,7 +157,8 @@
     "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.25.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "@vscode/vsce": "^4.0.0"
   },
   "homepage": "https://github.com/easy-tilelang/tilelang-devkit-vscode#readme",
   "bugs": {

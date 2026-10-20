@@ -6,7 +6,9 @@ import { CompilationTask } from '../src/host/task';
 import { parseRecord } from '../src/shared/record';
 import type { CompileConfig, TraceRecord } from '../src/shared/model';
 
-const python = process.env.TRACE_TEST_PYTHON ?? 'python';
+import { resolvePython } from '../scripts/python.mjs';
+
+const python = resolvePython();
 async function fixture(body: string, onChange?: (record: TraceRecord, task: CompilationTask) => void) {
   const base = path.resolve('artifacts', 'unit-tests');
   await fs.mkdir(base, { recursive: true });
