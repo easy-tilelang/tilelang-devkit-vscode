@@ -1,0 +1,20 @@
+name: Real CPU JIT (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  jit:
+    # Dedicated trusted host with the supported TileLang checkout, compiler,
+    # pytest, Node 22+, Xvfb and VS Code test runtime dependencies installed.
+    runs-on: [self-hosted, linux, tilelang-cpu-jit]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run test:python
+      - run: npm run build
+      - run: xvfb-run -a npm run test:extension
+        env:
+          TRACE_TEST_SIDEBAR_RUN: '1'
+          TRACE_TEST_REAL: '1'

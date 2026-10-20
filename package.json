@@ -1,0 +1,167 @@
+{
+  "name": "tilelang-devkit-vscode",
+  "displayName": "TileLang DevKit",
+  "icon": "media/tilelang-devkit-logo.png",
+  "description": "TileLang development tools for VS Code. Lower Trace explores CPU C JIT compilation, lowering passes, IR differences and cache reuse, online or offline.",
+  "version": "0.1.0",
+  "publisher": "easy-tilelang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/easy-tilelang/tilelang-devkit-vscode.git"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "tilelang",
+    "compiler",
+    "cpu",
+    "JIT",
+    "IR",
+    "diff"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./dist/extension.cjs",
+  "activationEvents": [
+    "onWebviewPanel:tilelangDevkit.workbench",
+    "onView:tilelangDevkit.launcher"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Mock demos and imported records work offline. Running Python requires a trusted workspace."
+    },
+    "virtualWorkspaces": {
+      "supported": "limited",
+      "description": "Imported records can be viewed; compilation requires a local or remote filesystem."
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "tilelangDevkit.open",
+        "title": "TileLang DevKit: Open Lower Trace"
+      },
+      {
+        "command": "tilelangDevkit.demo",
+        "title": "TileLang DevKit: Open Mock Demo"
+      },
+      {
+        "command": "tilelangDevkit.import",
+        "title": "TileLang DevKit: Import Compilation Record"
+      },
+      {
+        "command": "tilelangDevkit.use-current",
+        "title": "TileLang DevKit: Use Current Python File"
+      },
+      {
+        "command": "tilelangDevkit.example",
+        "title": "TileLang DevKit: Configure CPU Example"
+      },
+      {
+        "command": "tilelangDevkit.export",
+        "title": "TileLang DevKit: Export Compilation Record"
+      },
+      {
+        "command": "tilelangDevkit.reveal-error",
+        "title": "TileLang DevKit: Show Compilation Error"
+      },
+      {
+        "command": "tilelangDevkit.focus",
+        "title": "TileLang DevKit: Open Compilation Controls"
+      }
+    ],
+    "configuration": {
+      "title": "TileLang DevKit",
+      "properties": {
+        "tilelangDevkit.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Python executable in the workspace host environment. No shell command or arguments."
+        },
+        "tilelangDevkit.maxRecordSizeMiB": {
+          "type": "number",
+          "default": 64,
+          "minimum": 1,
+          "maximum": 1024,
+          "description": "Maximum size of an imported compilation record."
+        },
+        "tilelangDevkit.retainRunFiles": {
+          "type": "boolean",
+          "default": false,
+          "description": "Retain per-run protocol and temporary files for diagnostics. By default they are removed after the final record is saved."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "tilelangDevkit",
+          "title": "TileLang DevKit",
+          "icon": "media/tilelang-devkit.svg"
+        }
+      ]
+    },
+    "views": {
+      "tilelangDevkit": [
+        {
+          "type": "webview",
+          "id": "tilelangDevkit.launcher",
+          "name": "Lower Trace",
+          "contextualTitle": "TileLang DevKit"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "check": "tsc --noEmit",
+    "test": "tsx --test test/record.test.ts test/task.test.ts test/record-update.test.ts",
+    "test:python": "python -m pytest test/test_collector.py -q",
+    "test:webview": "playwright test",
+    "test:extension": "node scripts/test-extension.mjs",
+    "preview": "node scripts/preview.mjs",
+    "package": "vsce package --no-dependencies --baseContentUrl https://github.com/easy-tilelang/tilelang-devkit-vscode/blob/main --baseImagesUrl https://github.com/easy-tilelang/tilelang-devkit-vscode/raw/main",
+    "vscode:prepublish": "npm run build",
+    "benchmark": "tsx scripts/benchmark-record.ts",
+    "test:python:unit": "python -m unittest discover -s test -p test_runner_unit.py"
+  },
+  "dependencies": {
+    "@codemirror/lang-cpp": "^6.0.3",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/language": "^6.11.0",
+    "@codemirror/merge": "^6.10.0",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.5",
+    "@lezer/highlight": "^1.2.5",
+    "@vscode/vsce": "^4.0.0",
+    "ajv": "^8.17.1",
+    "diff": "^8.0.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/vscode": "1.95.0",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  },
+  "homepage": "https://github.com/easy-tilelang/tilelang-devkit-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/easy-tilelang/tilelang-devkit-vscode/issues"
+  }
+}

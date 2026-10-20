@@ -1,0 +1,390 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tilelang.com/schemas/tltrace-v1.json",
+  "title": "TileLang compilation record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "provenance",
+    "createdAt",
+    "status",
+    "durationMs",
+    "entry",
+    "environment",
+    "kernels",
+    "logs"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance": {
+      "enum": [
+        "real",
+        "mock"
+      ]
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "endedAt": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled",
+        "interrupted"
+      ]
+    },
+    "durationMs": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "function",
+        "kwargs",
+        "source"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "function": {
+          "type": "string"
+        },
+        "kwargs": {
+          "type": "object"
+        },
+        "source": {
+          "type": "string"
+        },
+        "mode": {
+          "const": "script"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cwd": {
+          "type": "string"
+        }
+      }
+    },
+    "environment": {
+      "$ref": "#/$defs/environment"
+    },
+    "kernels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/kernel"
+      }
+    },
+    "logs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/log"
+      }
+    },
+    "error": {
+      "$ref": "#/$defs/error"
+    }
+  },
+  "$defs": {
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "message"
+      ],
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "traceback": {
+          "type": "string"
+        },
+        "stageId": {
+          "type": "string"
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sequence",
+        "kind",
+        "name",
+        "phase",
+        "parentId",
+        "depth",
+        "status",
+        "beforeText",
+        "afterText",
+        "beforeLanguage",
+        "afterLanguage",
+        "durationMs",
+        "changed",
+        "added",
+        "deleted"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "enum": [
+            "source",
+            "frontend",
+            "pass",
+            "codegen",
+            "cache",
+            "jit"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "phase": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parentId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "running",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "interrupted"
+          ]
+        },
+        "beforeText": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "afterText": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "beforeLanguage": {
+          "enum": [
+            "python",
+            "cpp",
+            "text"
+          ]
+        },
+        "afterLanguage": {
+          "enum": [
+            "python",
+            "cpp",
+            "text"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "changed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "added": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "deleted": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "error": {
+          "$ref": "#/$defs/error"
+        }
+      }
+    },
+    "kernel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "symbol",
+        "status",
+        "cache",
+        "stages"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "running",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "interrupted"
+          ]
+        },
+        "cache": {
+          "enum": [
+            "not-applicable",
+            "hit",
+            "miss",
+            "unknown",
+            "disabled"
+          ]
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stage"
+          }
+        },
+        "cacheSource": {
+          "enum": [
+            "memory",
+            "disk",
+            "decorator",
+            "disabled",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "log": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timestamp",
+        "stream",
+        "text"
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "string"
+        },
+        "stream": {
+          "enum": [
+            "stdout",
+            "stderr",
+            "system"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python",
+        "tilelangVersion",
+        "tilelangPath",
+        "target"
+      ],
+      "properties": {
+        "python": {
+          "type": "string"
+        },
+        "tilelangVersion": {
+          "type": "string"
+        },
+        "tilelangPath": {
+          "type": "string"
+        },
+        "gitRevision": {
+          "type": "string"
+        },
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "arch": {
+              "type": "string"
+            }
+          }
+        },
+        "executionBackend": {
+          "type": "string"
+        },
+        "compilationMode": {
+          "enum": [
+            "jit",
+            "source"
+          ]
+        }
+      }
+    }
+  }
+}

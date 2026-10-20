@@ -1,0 +1,38 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run test:python:unit
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:webview
+      - run: xvfb-run -a npm run test:extension
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: test-results/
+          if-no-files-found: ignore
